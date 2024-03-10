@@ -30,6 +30,7 @@ func LoginHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid format",
 		})
+
 		return
 	}
 	username := loginRequst.Username
