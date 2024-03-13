@@ -8,8 +8,10 @@ import (
 )
 
 func homehandler(c *gin.Context) {
+	username, _ := c.Get("username")
+	msg := fmt.Sprintf("Welcome to the home page %s", username)
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Welcome to the home page",
+		"message": msg,
 	})
-	fmt.Println(c.GetHeader("user-agent"))
+	// fmt.Println(c.GetHeader("user-agent"))
 }

@@ -1,23 +1,21 @@
 package auth
 
 import (
-	"crypto/ecdsa"
-	"crypto/elliptic"
-	"crypto/rand"
 	"fmt"
 	"time"
 
 	"github.com/anandhere8/ShopSync/internal/app/model"
+	"github.com/anandhere8/ShopSync/key"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateJWT(userID uint, username, secretKey string,
-	expiration time.Duration) (string, error) {
+func GenerateJWT(userID, username string) (string, error) {
 
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	privateKey, err := key.LoadPrivetKey()
 	if err != nil {
-		return "", err
+		return "Failed to load the private key", err
 	}
+	// fmt.Println(privateKey)
 	claims := model.CustomClaims{
 		UserID:   userID,
 		Username: username,

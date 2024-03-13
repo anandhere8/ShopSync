@@ -3,24 +3,12 @@ package auth
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/anandhere8/ShopSync/internal/app/model"
+	"github.com/anandhere8/ShopSync/internal/app/repository"
+	"github.com/anandhere8/ShopSync/internal/app/service"
 	"github.com/gin-gonic/gin"
 )
-
-const DefaultTokenExpiration = time.Hour * 1
-
-func isValid(username, password string) bool {
-	if username == "anand" && password == "123" {
-		return true
-	}
-	return false
-}
-
-func getUserIDByUsername(string) uint {
-	return uint(123)
-}
 
 func LoginHandler(c *gin.Context) {
 	fmt.Println("Content-type ; ", c.ContentType())
@@ -35,15 +23,14 @@ func LoginHandler(c *gin.Context) {
 	}
 	username := loginRequst.Username
 	password := loginRequst.Password
-	if !isValid(username, password) {
+	if !service.ValidateCredential(username, password) {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid credentials",
 		})
 		return
 	}
-
-	userID := getUserIDByUsername(username)
-	token, err := GenerateJWT(userID, username, "abc", DefaultTokenExpiration)
+	userID, _ := repository.GetUserID(username)
+	token, err := GenerateJWT(userID, username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to generate token",
