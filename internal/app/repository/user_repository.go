@@ -1,6 +1,12 @@
 package repository
 
-import "github.com/anandhere8/ShopSync/internal/app/model"
+import (
+	"context"
+
+	db "github.com/anandhere8/ShopSync/db"
+	sqlc "github.com/anandhere8/ShopSync/db/sqlc"
+	"github.com/anandhere8/ShopSync/internal/app/model"
+)
 
 func GetUserPassword(username string) (string, error) {
 	if username == "anand" {
@@ -16,6 +22,22 @@ func GetUserID(username string) (string, error) {
 	return "asfsaf", nil
 }
 
-func RegisterUser(model.User) error {
-	return nil
+func RegisterUser(u model.User) (sqlc.User, error) {
+	dbClient, err := db.GetDBInstance()
+	if err != nil {
+		return sqlc.User{}, err
+	}
+	args := sqlc.CreateUserParams{
+		Firstname:    u.Firstname,
+		Lastname:     u.Lastname,
+		Username:     u.Username,
+		Email:        u.Email,
+		PhoneNumber:  u.PhoneNumber,
+		PasswordHash: u.Password,
+	}
+	newUser, err := dbClient.CreateUser(context.Background(), args)
+	if err != nil {
+		return sqlc.User{}, err
+	}
+	return newUser, nil
 }

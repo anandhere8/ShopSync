@@ -1,9 +1,6 @@
 package server
 
 import (
-	"fmt"
-	"reflect"
-
 	db "github.com/anandhere8/ShopSync/db/sqlc"
 	"github.com/anandhere8/ShopSync/internal/app/handler"
 	"github.com/gin-gonic/gin"
@@ -14,13 +11,12 @@ type Server struct {
 	queries *db.Queries
 }
 
-func NewServer(querie *db.Queries) Server {
-	fmt.Println(reflect.TypeOf(querie))
-	nServer := Server{queries: querie}
+func NewServer() *Server {
+	nServer := Server{}
 	router := gin.Default()
 	nServer.router = router
 	handler.ConfigureRoutes(router)
-	return nServer
+	return &nServer
 }
 
 func (s *Server) Start(address string) error {

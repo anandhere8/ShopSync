@@ -11,6 +11,7 @@ import (
 )
 
 func LoginHandler(c *gin.Context) {
+
 	fmt.Println("Content-type ; ", c.ContentType())
 	var loginRequst model.LoginRequest
 	err := c.Bind(&loginRequst)
