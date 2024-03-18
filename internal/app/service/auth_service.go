@@ -1,15 +1,18 @@
 package service
 
 import (
-	"github.com/anandhere8/ShopSync/internal/app/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
-func ValidateCredential(username, password string) bool {
-	storedPassword, err := repository.GetUserPassword(username)
+func ValidateCredential(storedPassword string, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(password))
+	return err == nil
+}
+
+func Encrypt(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 	if err != nil {
-		return false
+		return "", err
 	}
-	// fmt.Println(storedPassword)
-	// fmt.Println(password)
-	return password == storedPassword
+	return string(hash), nil
 }

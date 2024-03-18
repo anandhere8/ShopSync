@@ -78,5 +78,6 @@ func TestListUser(t *testing.T) {
 	require.NoError(t, err)
 	for _, usr := range allUsr {
 		require.NotEmpty(t, usr)
+		testQueries.DeleteUser(context.Background(), usr.UserID)
 	}
 }

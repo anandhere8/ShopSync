@@ -6,24 +6,27 @@ import (
 	db "github.com/anandhere8/ShopSync/db"
 	sqlc "github.com/anandhere8/ShopSync/db/sqlc"
 	"github.com/anandhere8/ShopSync/internal/app/model"
+	"github.com/anandhere8/ShopSync/internal/app/service"
 )
 
-func GetUserPassword(username string) (string, error) {
-	if username == "anand" {
-		return "123", nil
+func GetUserByUsername(username string) (sqlc.User, error) {
+	dbClient, err := db.GetDBInstance()
+	if err != nil {
+		return sqlc.User{}, err
 	}
-	return "kkk", nil
-}
-
-func GetUserID(username string) (string, error) {
-	if username == "anand" {
-		return "ID123", nil
+	newUser, err := dbClient.GetUserByUsername(context.Background(), username)
+	if err != nil {
+		return sqlc.User{}, err
 	}
-	return "asfsaf", nil
+	return newUser, nil
 }
 
 func RegisterUser(u model.User) (sqlc.User, error) {
 	dbClient, err := db.GetDBInstance()
+	if err != nil {
+		return sqlc.User{}, err
+	}
+	passwordHash, err := service.Encrypt(u.Password)
 	if err != nil {
 		return sqlc.User{}, err
 	}
@@ -33,7 +36,7 @@ func RegisterUser(u model.User) (sqlc.User, error) {
 		Username:     u.Username,
 		Email:        u.Email,
 		PhoneNumber:  u.PhoneNumber,
-		PasswordHash: u.Password,
+		PasswordHash: passwordHash,
 	}
 	newUser, err := dbClient.CreateUser(context.Background(), args)
 	if err != nil {
