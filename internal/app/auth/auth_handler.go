@@ -30,8 +30,10 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	if !service.ValidateCredential(user.PasswordHash, password) {
+	if err = service.ValidateCredential(user.PasswordHash, password); err != nil {
+
 		c.JSON(http.StatusUnauthorized, util.ErrorResponse(err))
+		// fmt.Println()
 		return
 	}
 

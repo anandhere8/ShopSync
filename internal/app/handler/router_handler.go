@@ -13,4 +13,6 @@ func ConfigureRoutes(router *gin.Engine) {
 	// router.Use(middleware.AuthMiddleware())
 	authRouter := router.Group("/").Use(middleware.AuthMiddleware())
 	authRouter.GET("/home", homehandler)
+	authRouter.GET("/me", userProfile)
+	authRouter.GET("/uploadpfp", uploadProfilePic)
 }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	server "github.com/anandhere8/ShopSync/cmd/shopsync"
 )
 
@@ -12,4 +14,5 @@ func main() {
 
 	server := server.NewServer()
 	server.Start(address)
+	fmt.Printf("Server started at : http://%s", address)
 }

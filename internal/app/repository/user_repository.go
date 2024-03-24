@@ -21,6 +21,18 @@ func GetUserByUsername(username string) (sqlc.User, error) {
 	return newUser, nil
 }
 
+func GetUserByUserID(userID int64) (sqlc.User, error) {
+	dbClient, err := db.GetDBInstance()
+	if err != nil {
+		return sqlc.User{}, err
+	}
+	newUser, err := dbClient.GetUserByID(context.Background(), userID)
+	if err != nil {
+		return sqlc.User{}, err
+	}
+	return newUser, nil
+}
+
 func RegisterUser(u model.User) (sqlc.User, error) {
 	dbClient, err := db.GetDBInstance()
 	if err != nil {

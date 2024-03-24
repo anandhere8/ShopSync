@@ -1,12 +1,17 @@
 package service
 
 import (
+	"errors"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
-func ValidateCredential(storedPassword string, password string) bool {
+func ValidateCredential(storedPassword string, password string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(password))
-	return err == nil
+	if err != nil {
+		err = errors.New("invalid credential")
+	}
+	return err
 }
 
 func Encrypt(password string) (string, error) {
