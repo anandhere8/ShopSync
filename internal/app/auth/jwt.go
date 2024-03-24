@@ -9,19 +9,20 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateJWT(userID, username string) (string, error) {
+func GenerateJWT(userID, username string) (model.Token, error) {
 
 	privateKey, err := key.LoadPrivetKey()
 	if err != nil {
-		return "Failed to load the private key", err
+		return model.Token{}, err
 	}
-	// fmt.Println(privateKey)
+	loc, _ := time.LoadLocation("Asia/Kolkata")
+	now := time.Now().In(loc)
 	claims := model.CustomClaims{
 		UserID:   userID,
 		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(now.Add(24 * time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(now),
 			Audience:  []string{"user"},
 		},
 	}
@@ -32,7 +33,16 @@ func GenerateJWT(userID, username string) (string, error) {
 	if err != nil {
 		fmt.Println("Failed to create token")
 		fmt.Println(err)
-		return "", err
+		return model.Token{}, err
 	}
-	return tokenString, nil
+
+	curtoken := model.Token{
+		Access_token: tokenString,
+		Issuer:       username,
+		Auth_type:    "bearer",
+		ExpiresAt:    claims.RegisteredClaims.ExpiresAt.String(),
+		CreatedAt:    claims.RegisteredClaims.IssuedAt.String(),
+	}
+
+	return curtoken, nil
 }

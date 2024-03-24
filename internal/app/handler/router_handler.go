@@ -8,6 +8,11 @@ import (
 
 func ConfigureRoutes(router *gin.Engine) {
 	router.POST("/login", auth.LoginHandler)
-	router.Use(middleware.AuthMiddleware())
-	router.GET("/home", homehandler)
+	router.POST("/register", registerHandler)
+	router.GET("/test", testHandler)
+	// router.Use(middleware.AuthMiddleware())
+	authRouter := router.Group("/").Use(middleware.AuthMiddleware())
+	authRouter.GET("/home", homehandler)
+	authRouter.GET("/me", userProfile)
+	authRouter.GET("/uploadpfp", uploadProfilePic)
 }

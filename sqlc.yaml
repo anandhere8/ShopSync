@@ -1,8 +1,8 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    queries: "./db/query/query.sql"
-    schema: "./db/schema/ShopSync.sql"
+    queries: "./db/query"
+    schema: "./db/migration/000001_init_schema.up.sql"
     gen:
       go:
         package: "db"

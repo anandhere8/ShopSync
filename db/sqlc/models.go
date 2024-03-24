@@ -5,12 +5,50 @@
 package db
 
 import (
+	"database/sql"
 	"time"
 )
 
-type User struct {
-	ID        int64
-	Username  string
-	Role      string
+type Employee struct {
+	EmpID     int64
+	ShopID    int64
+	UserID    int64
+	RoleID    int64
 	CreatedAt time.Time
+}
+
+type Item struct {
+	ItemID      int64
+	OwnerID     int64
+	ShopID      int64
+	ItemCode    string
+	ItemName    string
+	Description sql.NullString
+	Quantity    int64
+	CreatedAt   time.Time
+}
+
+type Role struct {
+	RoleID   int64
+	RoleName string
+}
+
+type Shop struct {
+	ShopID          int64
+	OwnerID         int64
+	ShopName        string
+	ShopDescription sql.NullString
+	ShopAddress     sql.NullString
+	CreatedAt       time.Time
+}
+
+type User struct {
+	UserID       int64
+	Firstname    string
+	Lastname     string
+	Username     string
+	Email        string
+	PhoneNumber  string
+	PasswordHash string
+	CreatedAt    time.Time
 }
